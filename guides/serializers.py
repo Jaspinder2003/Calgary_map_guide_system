@@ -10,12 +10,16 @@ class CommunitiesSerializer(serializers.ModelSerializer):
         fields =  ['name', 'area', 'population']
 
 
+from rest_framework import serializers
+from .models import CrimeRates
+
 class CrimeRatesSerializer(serializers.ModelSerializer):
-    community_name = serializers.CharField(source='communityid.CommunityName', read_only=True)
+    community_name = serializers.CharField(source='communityid.name', read_only=True)  # ✅ uses the correct field
 
     class Meta:
         model = CrimeRates
         fields = ['burglaryrate', 'scamrate', 'assaultrate', 'community_name']
+
 
 
 class DiningPlacesSerializer(serializers.ModelSerializer):

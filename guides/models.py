@@ -25,7 +25,7 @@ class Communities(models.Model):
     name = models.CharField(db_column='Name', max_length=100)  # Field name made lowercase.
     area = models.CharField(db_column='Area', max_length=100, blank=True, null=True)  # Field name made lowercase.
     population = models.IntegerField(db_column='Population', blank=True, null=True)  # Field name made lowercase.
-
+    
     class Meta:
         managed = False
         db_table = 'Communities'
