@@ -19,7 +19,7 @@ from rest_framework.decorators import action
 
 
 def community_list(request):
-    communities = Community.objects.all()
+    communities = Communities.objects.all()
     data = list(communities.values('name'),communities.values("Area",communities.values('Population')))  # Adjust fields as needed
     return JsonResponse(data, safe=False)
 
@@ -63,6 +63,13 @@ class EducationInstitutionsViewSet(viewsets.ModelViewSet):
     queryset = EducationInstitutions.objects.all()
     serializer_class = EducationInstitutionsSerializer
 
+    def get_queryset(self):
+        qs = EducationInstitutions.objects.all()
+        t = self.request.query_params.get('type')
+        if t in {'university','school'}:
+            qs = qs.filter(type=t)
+        return qs
+
 class HealthcareFacilitiesViewSet(viewsets.ModelViewSet):
     queryset = HealthcareFacilities.objects.all()
     serializer_class = HealthcareFacilitiesSerializer
@@ -82,6 +89,11 @@ class TransitViewSet(viewsets.ModelViewSet):
 class UniversitiesCollegesViewSet(viewsets.ModelViewSet):
     queryset = UniversitiesColleges.objects.all()
     serializer_class = UniversitiesCollegesSerializer
+
+class SchoolsViewSet(viewsets.ModelViewSet):
+    queryset = School.objects.all()
+    serializer_class = SchoolsSerializer
+
 
     
 class UsersViewSet(viewsets.ModelViewSet):

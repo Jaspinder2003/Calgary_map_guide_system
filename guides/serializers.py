@@ -11,9 +11,12 @@ class CommunitiesSerializer(serializers.ModelSerializer):
 
 
 class CrimeRatesSerializer(serializers.ModelSerializer):
+    community_name = serializers.CharField(source='communityid.CommunityName', read_only=True)
+
     class Meta:
         model = CrimeRates
-        fields = '__all__'
+        fields = ['burglaryrate', 'scamrate', 'assaultrate', 'community_name']
+
 
 class DiningPlacesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,6 +52,12 @@ class UniversitiesCollegesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UniversitiesColleges
         fields = '__all__'
+
+class SchoolsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = ['institution', 'name', 'number_of_students']
+
 
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:

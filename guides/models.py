@@ -8,6 +8,8 @@
 from django.db import models
 
 
+
+
 class Admins(models.Model):
     aid = models.AutoField(db_column='AID', primary_key=True)  # Field name made lowercase.
     username = models.CharField(db_column='Username', unique=True, max_length=50)  # Field name made lowercase.
@@ -53,18 +55,20 @@ class DiningPlaces(models.Model):
         managed = True
         db_table = 'Dining_Places'
 
-
 class EducationInstitutions(models.Model):
-    institutionid = models.AutoField(db_column='InstitutionID', primary_key=True)  # Field name made lowercase.
-    name = models.CharField(db_column='Name', max_length=150)  # Field name made lowercase.
-    address = models.CharField(db_column='Address', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    noofstudents = models.IntegerField(db_column='NoOfStudents', blank=True, null=True)  # Field name made lowercase.
-    communityid = models.ForeignKey(Communities,on_delete = models.CASCADE,db_column='CommunityID')  # Field name made lowercase.
-    
-    class Meta:
-        managed = True
-        db_table = 'Education_Institutions'
+    TYPE_CHOICES = [
+        ('university', 'University / College'),
+        ('school', 'School'),
+    ]
 
+    institution_id = models.AutoField(primary_key=True, db_column='InstitutionID')
+    Name = models.CharField(max_length=255)
+    NoOfStudents = models.IntegerField(default=0)
+    Address = models.CharField(max_length=255, blank=True, null=True)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+
+    class Meta:
+        db_table = 'Education_Institutions'
 
 class HealthcareFacilities(models.Model):
     facilityid = models.AutoField(db_column='FacilityID', primary_key=True)  # Field name made lowercase.
@@ -96,13 +100,34 @@ class RentalPlaces(models.Model):
 
 
 
-
-class Schools(models.Model):
-    institutionid = models.OneToOneField(EducationInstitutions, models.CASCADE, db_column='InstitutionID', primary_key=True)  # Field name made lowercase.
-    null = True
+class UniversitiesColleges(models.Model):
+    # … any other fields …
+    institution = models.OneToOneField(
+        EducationInstitutions,
+        on_delete=models.CASCADE,
+        null=True,       # allow NULLs for existing rows
+        blank=True       # allow blanks in forms/admin
+    )
+    name = models.CharField(max_length=255, default='Unknown University')
+    number_of_students = models.IntegerField(default=0)
+    
     class Meta:
         managed = True
-        db_table = 'Schools'
+        db_table = 'Universities_Colleges'
+
+class School(models.Model):
+    # Map the existing InstitutionID column as the PK
+    institution = models.OneToOneField(
+        EducationInstitutions,
+        on_delete=models.CASCADE,
+        db_column='InstitutionID',  # exactly your table’s column name
+        primary_key=True            # tells Django “this is the PK—no 'id' field”
+    )
+    name = models.CharField(max_length=255, default='Unknown School')
+    number_of_students = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'schools'
 
 
 class Superstores(models.Model):
@@ -125,13 +150,6 @@ class Transit(models.Model):
         managed = True
         db_table = 'Transit'
 
-
-class UniversitiesColleges(models.Model):
-    institutionid = models.OneToOneField(EducationInstitutions,on_delete= models.CASCADE, db_column='InstitutionID', primary_key=True)  # Field name made lowercase.
-   
-    class Meta:
-        managed = True
-        db_table = 'Universities_Colleges'
 
 
 class UserQueries(models.Model):

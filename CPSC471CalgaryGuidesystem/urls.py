@@ -14,7 +14,6 @@ router.register(r'healthcare-facilities', HealthcareFacilitiesViewSet)
 router.register(r'rental-places', RentalPlacesViewSet)
 router.register(r'superstores', SuperstoresViewSet)
 router.register(r'transit', TransitViewSet)
-router.register(r'universities-colleges', UniversitiesCollegesViewSet)
 router.register(r'users', UsersViewSet)
 router.register(r'user-queries', UserQueriesViewSet)
 
