@@ -14,7 +14,7 @@ from rest_framework import serializers
 from .models import CrimeRates
 
 class CrimeRatesSerializer(serializers.ModelSerializer):
-    community_name = serializers.CharField(source='communityid.name', read_only=True)  # ✅ uses the correct field
+    community_name = serializers.CharField(source='communityid.name', read_only=True)  
 
     class Meta:
         model = CrimeRates
@@ -84,3 +84,13 @@ class RegisterSerializer(serializers.Serializer):
             password = make_password(validated_data['password']),
             Email    = validated_data['email']
         )
+        
+def get_community_boundaries(request):
+    # Get all Districts and serialize them to GeoJSON
+    districts = District.objects.all()
+    
+    # Serialize with 'geojson' format
+    data = serialize('geojson', districts, fields=('name', 'geom'))  # Include only the necessary fields
+    
+    # Return the response as a JsonResponse
+    return JsonResponse(data, safe=False)
