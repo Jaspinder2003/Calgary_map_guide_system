@@ -16,8 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.10.3/lib/libgdal.dylib'
-GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/geos/3.13.1/lib/libgeos_c.1.19.2.dylib'
+# GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.10.3/lib/libgdal.dylib'
+# GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/geos/3.13.1/lib/libgeos_c.1.19.2.dylib'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -59,7 +59,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-ROOT_URLCONF = 'CPSC471CalgaryGuidesystem.urls'
+ROOT_URLCONF = 'guides.urls'
 
 TEMPLATES = [
     {
@@ -85,10 +85,10 @@ WSGI_APPLICATION = 'CPSC471CalgaryGuidesystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'CalgaryGuideSystem',
+        'NAME': 'calgary_map',
         'USER': 'root',
-        'PASSWORD': '12345678',
-        'HOST': '34.130.21.78',
+        'PASSWORD': '159357@Ucalgary',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
@@ -150,3 +150,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
+import os
+
+GDAL_LIBRARY_PATH = r"C:\Users\jaspi\anaconda3\Library\bin\gdal.dll"
+GEOS_LIBRARY_PATH = r"C:\Users\jaspi\anaconda3\Library\bin\geos_c.dll"  # Or libgeos_c-1.dll
+
+ALLOWED_HOSTS = ['*']  # or later, ['your-app-name.onrender.com']
+
+# Static files for Render
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
