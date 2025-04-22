@@ -137,6 +137,12 @@ class Superstores(models.Model):
     address = models.CharField(max_length=255)
     open_hours = models.CharField(max_length=255, null=True, blank=True)  # For open hours
     type = models.CharField(max_length=255, null=True, blank=True)  # For store type
+    
+    class Meta:
+        db_table = 'Superstores'  
+
+    def __str__(self):
+        return self.name
 
     def __str__(self):
         return self.name
