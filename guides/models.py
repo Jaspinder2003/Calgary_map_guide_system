@@ -132,13 +132,14 @@ class School(models.Model):
 
 
 class Superstores(models.Model):
-    superstoreid = models.AutoField(db_column='SuperstoreID', primary_key=True)  # Field name made lowercase.
-    name = models.CharField(db_column='Name', max_length=150)  # Field name made lowercase.
-    address = models.CharField(db_column='Address', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    superstoreId = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    open_hours = models.CharField(max_length=255, null=True, blank=True)  # For open hours
+    type = models.CharField(max_length=255, null=True, blank=True)  # For store type
 
-    class Meta:
-        managed = True
-        db_table = 'Superstores'
+    def __str__(self):
+        return self.name
 
 
 class Transit(models.Model):
@@ -168,11 +169,16 @@ class Users(models.Model):
    
     username = models.CharField(db_column='Username', unique=True, max_length=50)  # Field name made lowercase.
     password = models.CharField(db_column='Password', max_length=255)  # Field name made lowercase.
-    Email = models.EmailField(db_column='Email', max_length=50)  # Field name made lowercase.
+    email = models.EmailField(db_column='email', max_length=50)  # Field name made lowercase.
   
     class Meta:
         managed = True
         db_table = 'Users'
+    
+    def save(self, *args, **kwargs):
+        if self.email:
+            self.email = self.email.lower()
+        super().save(*args, **kwargs)
 
 
 class District(models.Model):

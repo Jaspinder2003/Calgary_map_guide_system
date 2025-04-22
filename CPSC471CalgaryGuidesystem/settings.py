@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'guides',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,9 @@ CORS_ALLOWED_ORIGINS = [
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Configure Whitenoise to serve static files
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}

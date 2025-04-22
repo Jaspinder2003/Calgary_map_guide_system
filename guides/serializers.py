@@ -66,7 +66,7 @@ class SchoolsSerializer(serializers.ModelSerializer):
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = '__all__'
+        fields = ['id', 'name', 'email', 'password']
 
 class UserQueriesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -82,15 +82,6 @@ class RegisterSerializer(serializers.Serializer):
         return Users.objects.create(
             username = validated_data['username'],
             password = make_password(validated_data['password']),
-            Email    = validated_data['email']
+            email    = validated_data['email']
         )
         
-def get_community_boundaries(request):
-    # Get all Districts and serialize them to GeoJSON
-    districts = District.objects.all()
-    
-    # Serialize with 'geojson' format
-    data = serialize('geojson', districts, fields=('name', 'geom'))  # Include only the necessary fields
-    
-    # Return the response as a JsonResponse
-    return JsonResponse(data, safe=False)

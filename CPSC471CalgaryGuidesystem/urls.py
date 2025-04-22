@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from guides.views import *
+from rest_framework.authtoken.views import obtain_auth_token
 
 
 router = DefaultRouter()
@@ -15,8 +16,9 @@ router.register(r'rental-places', RentalPlacesViewSet)
 router.register(r'superstores', SuperstoresViewSet)
 router.register(r'transit', TransitViewSet)
 router.register(r'users', UsersViewSet)
-router.register(r'user-queries', UserQueriesViewSet)
-
+router.register(r'community-boundaries', CommunityBoundariesViewSet, basename='community-boundaries')
+router.register(r'user-queries', UserQueriesViewSet, basename='user-queries')
+router.register(r'api-token-auth', AuthTokenViewSet, basename='api-token-auth')
 
 
 urlpatterns = [      

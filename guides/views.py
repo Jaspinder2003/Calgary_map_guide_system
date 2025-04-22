@@ -1,5 +1,5 @@
 from django.shortcuts import render
-# Create your views here.
+from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework import generics
 from .serializers import CommunitiesSerializer
 from guides.models import Communities
@@ -15,7 +15,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 import json 
 from rest_framework.decorators import action
-
+from rest_framework.views import APIView
+from .models import District
+from django.core.serializers import serialize
+from rest_framework.authentication import TokenAuthentication
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 
 def community_list(request):
@@ -23,27 +28,37 @@ def community_list(request):
     data = list(communities.values('name'),communities.values("Area",communities.values('Population')))  # Adjust fields as needed
     return JsonResponse(data, safe=False)
 
+
 @csrf_exempt
 @api_view(['POST'])
 def register_user(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        username = data.get('email')
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        username = data.get('username')
+        email = data.get('email')
         password = data.get('password')
 
-        if not username or not password:
+        if not username or not email or not password:
             return JsonResponse({'error': 'Missing fields'}, status=400)
 
-        # Check if the user already exists
+        email = email.lower().strip()
+
         if User.objects.filter(username=username).exists():
             return JsonResponse({'error': 'User already exists'}, status=400)
 
-        # Create the user
-        user = User.objects.create_user(username=username, password=password)
-
-        return JsonResponse({'id': user.id}, status=201)
+        user = User.objects.create_user(username=username, email=email, password=password)
+        return JsonResponse({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email
+        }, status=201)
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
+
 
 
 
@@ -108,5 +123,29 @@ class UsersViewSet(viewsets.ModelViewSet):
         return Response({'id': user.id}, status=status.HTTP_201_CREATED)
 
 class UserQueriesViewSet(viewsets.ModelViewSet):
-    queryset = UserQueries.objects.all()
-    serializer_class = UserQueriesSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes     = [IsAuthenticated]
+    serializer_class       = UserQueriesSerializer
+
+    def get_queryset(self):
+        # only this user’s queries
+        return UserQueries.objects.filter(uid=self.request.user)
+
+    def perform_create(self, serializer):
+        # automatically associate new queries with the logged-in user
+        serializer.save(uid=self.request.user)
+        
+        
+class CommunityBoundariesViewSet(viewsets.ModelViewSet):
+    queryset = District.objects.all()
+    serializer_class = District
+    
+    
+class AuthTokenViewSet(viewsets.ViewSet):
+    
+    def create(self, request):
+        # simply call the DRF obtain_auth_token view under the hood:
+        response = obtain_auth_token(request)
+        # obtain_auth_token returns an HttpResponse,
+        # so we need to forward its data and status
+        return Response(response.data, status=response.status_code)
