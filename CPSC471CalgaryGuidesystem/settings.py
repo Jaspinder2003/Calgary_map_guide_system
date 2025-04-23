@@ -92,12 +92,12 @@ WSGI_APPLICATION = 'CPSC471CalgaryGuidesystem.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',  # Not 'postgresql'
-        'NAME': 'calgary_map_db',  # from Render
-        'USER': 'calgary_map_db_user',  # from Render
-        'PASSWORD': 'HmnHwnZEGmgYXnozLhumzCtoLfh5TtpZ',  # from Render
-        'HOST': 'dpg-d04hqri4d50c73a72t0g-a',  # from Render
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.mysql',  # Not 'postgresql'
+        'NAME': 'calgary_map',  # from Render
+        'USER': 'root',  # from Render
+        'PASSWORD': '159357@Ucalgary',  # from Render
+        'HOST': 'root',  # from Render
+        'PORT': '3306',
     }
 }
 
