@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
-
+import platform
 from pathlib import Path
 
 if platform.system() == 'Windows':
