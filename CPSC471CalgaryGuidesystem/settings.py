@@ -13,7 +13,12 @@ import os
 
 from pathlib import Path
 
-os.environ["GDAL_LIBRARY_PATH"] = "/usr/lib/x86_64-linux-gnu/libgdal.so"
+if platform.system() == 'Windows':
+    os.environ["GDAL_LIBRARY_PATH"] = r"C:\Users\jaspi\anaconda3\Library\bin\gdal.dll"
+    os.environ["GEOS_LIBRARY_PATH"] = r"C:\Users\jaspi\anaconda3\Library\bin\geos_c.dll"
+else:
+    os.environ["GDAL_LIBRARY_PATH"] = "/usr/lib/x86_64-linux-gnu/libgdal.so"
+    os.environ["GEOS_LIBRARY_PATH"] = "/usr/lib/x86_64-linux-gnu/libgeos_c.so"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -154,8 +159,8 @@ REST_FRAMEWORK = {
 }
 import os
 
-GDAL_LIBRARY_PATH = r"C:\Users\jaspi\anaconda3\Library\bin\gdal.dll"
-GEOS_LIBRARY_PATH = r"C:\Users\jaspi\anaconda3\Library\bin\geos_c.dll"  # Or libgeos_c-1.dll
+# GDAL_LIBRARY_PATH = r"C:\Users\jaspi\anaconda3\Library\bin\gdal.dll"
+# GEOS_LIBRARY_PATH = r"C:\Users\jaspi\anaconda3\Library\bin\geos_c.dll"  # Or libgeos_c-1.dll
 
 ALLOWED_HOSTS = ['*']  # or later, ['your-app-name.onrender.com']
 
