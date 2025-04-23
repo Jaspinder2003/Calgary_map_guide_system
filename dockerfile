@@ -2,15 +2,18 @@
 FROM python:3.12-slim
 
 #  Install system-level dependencies (GDAL, PROJ, etc.)
+# Install system dependencies including GDAL + compiler tools
 RUN apt-get update && apt-get install -y \
     gdal-bin \
     libgdal-dev \
     binutils \
     libproj-dev \
+    build-essential \
     gcc \
-    musl-dev \
+    g++ \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
+
 
 #  Set GDAL path so Django can find it
 ENV GDAL_LIBRARY_PATH=/usr/lib/libgdal.so
