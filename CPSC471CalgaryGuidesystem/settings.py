@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'guides',
     'rest_framework.authtoken',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -91,14 +92,15 @@ WSGI_APPLICATION = 'CPSC471CalgaryGuidesystem.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'calgary_map',
-        'USER': 'root',
-        'PASSWORD': '159357@Ucalgary',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',  # Not 'postgresql'
+        'NAME': 'calgary_map_db',  # from Render
+        'USER': 'calgary_map_db_user',  # from Render
+        'PASSWORD': 'HmnHwnZEGmgYXnozLhumzCtoLfh5TtpZ',  # from Render
+        'HOST': 'dpg-d04hqri4d50c73a72t0g-a',  # from Render
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
