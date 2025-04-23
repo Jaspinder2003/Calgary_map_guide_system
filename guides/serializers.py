@@ -1,87 +1,70 @@
+# serializers.py
 from rest_framework import serializers
-from .models import *  # or wherever your model lives
-from django.contrib.auth.hashers import make_password
-from .models import Users
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from .models import (Community, RentalPlaces, EducationInstitutions, 
+                    HealthcareFacilities, DiningPlaces, TransitStops, Superstores)
 
-
-class CommunitiesSerializer(serializers.ModelSerializer):
+class CommunitySerializer(GeoFeatureModelSerializer):
     class Meta:
-        model = Communities
-        fields =  ['name', 'area', 'population']
+        model = Community
+        geo_field = 'boundary'
+        fields = ['name', 'population', 'community_structure', 'boundary']
 
-
-from rest_framework import serializers
-from .models import CrimeRates
-
-class CrimeRatesSerializer(serializers.ModelSerializer):
-    community_name = serializers.CharField(source='communityid.name', read_only=True)  
-
+class RentalPlacesSerializer(GeoFeatureModelSerializer):
     class Meta:
-        model = CrimeRates
-        fields = ['burglaryrate', 'scamrate', 'assaultrate', 'community_name']
+        model = RentalPlaces
+        geo_field = 'location'
+        fields = ['address', 'community_name', 'location', 'status', 'type']
 
+class EducationInstitutionsSerializer(GeoFeatureModelSerializer):
+    class Meta:
+        model = EducationInstitutions
+        geo_field = 'location'
+        fields = ['name', 'address', 'community_name', 'email', 'location', 
+                 'phone_no', 'post_secondary', 'postal_code']
 
+class HealthcareFacilitiesSerializer(GeoFeatureModelSerializer):
+    class Meta:
+        model = HealthcareFacilities
+        geo_field = 'location'
+        fields = ['address', 'commnuity_name', 'location', 'name', 'type']
 
 class DiningPlacesSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiningPlaces
-        fields = '__all__'
+        fields = ['id', 'name', 'address', 'cuisine', 'rating']
 
-class EducationInstitutionsSerializer(serializers.ModelSerializer):
+class TransitStopsSerializer(GeoFeatureModelSerializer):
     class Meta:
-        model = EducationInstitutions
-        fields = '__all__'
-
-class HealthcareFacilitiesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HealthcareFacilities
-        fields = '__all__'
-
-class RentalPlacesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RentalPlaces
-        fields = '__all__'
+        model = TransitStops
+        geo_field = 'location'
+        fields = ['teleride_number', 'location', 'route_category', 
+                 'route_long_name', 'route_short_name', 'status', 'stop_name']
 
 class SuperstoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Superstores
-        fields = '__all__'
+        fields = ['id', 'name', 'address']
 
-class TransitSerializer(serializers.ModelSerializer):
+# Additional serializers for relationship tables
+from .models import AccessibleBy, AccessibleBy2, LocatedIn, LocatedNear
+
+class AccessibleBySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Transit
-        fields = '__all__'
+        model = AccessibleBy
+        fields = ['edu_address', 'stop_id', 'distance_m']
 
-class UniversitiesCollegesSerializer(serializers.ModelSerializer):
+class AccessibleBy2Serializer(serializers.ModelSerializer):
     class Meta:
-        model = UniversitiesColleges
-        fields = '__all__'
+        model = AccessibleBy2
+        fields = ['rental_address', 'stop_id', 'distance_m']
 
-class SchoolsSerializer(serializers.ModelSerializer):
+class LocatedInSerializer(serializers.ModelSerializer):
     class Meta:
-        model = School
-        fields = ['institution', 'name', 'number_of_students']
+        model = LocatedIn
+        fields = ['community_name', 'route_name', 'stop_id', 'stop_name']
 
-
-class UsersSerializer(serializers.ModelSerializer):
+class LocatedNearSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
-        fields = ['id', 'name', 'email', 'password']
-
-class UserQueriesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserQueries
-        fields = '__all__'
-
-class RegisterSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=50)
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True, min_length=8)
-
-    def create(self, validated_data):
-        return Users.objects.create(
-            username = validated_data['username'],
-            password = make_password(validated_data['password']),
-            email    = validated_data['email']
-        )
-        
+        model = LocatedNear
+        fields = ['edu_address', 'rental_address', 'distance_m']
