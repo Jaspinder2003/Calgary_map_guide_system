@@ -4,5 +4,4 @@ djangorestframework-gis==1.1
 django-cors-headers==4.7.0
 mysqlclient==2.2.7
 whitenoise==6.9.0
-gdal==3.6.2  # Or your installed GDAL version
 gunicorn==21.2.0
