@@ -13,9 +13,26 @@ class CommunityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Community.objects.all()
     serializer_class = CommunitySerializer
 
-class RentalPlacesViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = RentalPlaces.objects.all()
-    serializer_class = RentalPlacesSerializer
+from django.http import JsonResponse
+from .models import RentalPlaces
+
+def rental_places_geojson(request):
+    features = []
+    for place in RentalPlaces.objects.exclude(location=None):
+        features.append({
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [place.location.x, place.location.y],
+            },
+            "properties": {
+                "address": place.address,
+                "type": place.type,
+                "status": place.status
+            },
+        })
+    return JsonResponse({"type": "FeatureCollection", "features": features})
+
 
 class EducationInstitutionsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = EducationInstitutions.objects.all()

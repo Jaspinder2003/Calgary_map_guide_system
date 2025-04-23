@@ -2,6 +2,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
+from .views import rental_places_geojson
 
 router = DefaultRouter()
 # Main model endpoints
@@ -22,4 +23,5 @@ router.register(r'located-near', views.LocatedNearViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path("api/rental_places_geojson/", rental_places_geojson),
 ]
